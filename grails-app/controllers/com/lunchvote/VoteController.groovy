@@ -17,7 +17,7 @@ class VoteController {
     }
 
     def submit(){
-        def restaurantList = params.restaurants // get votes from params
+        def restaurantList = params.restaurants
         def username = params.username
         //handle single vote
         if(restaurantList instanceof String){
@@ -73,14 +73,15 @@ class VoteController {
         votes.each{ vote ->
             weightSum += vote.weight
         }
-        def winner
-        def random = new Random();
-        def minimum = 0
-        def maximum  = weightSum
-        def randomValue = (random.nextLong() % (maximum - minimum)) + minimum
+        def winner = null
+        def randomValue = Math.random()*weightSum
         votes.each{ vote ->
-            weightSum -= vote.weight
-            if(weightSum < randomValue) winner = vote
+            if(!winner){
+                weightSum -= vote.weight
+                if(weightSum < randomValue) {
+                    winner = vote
+                }
+            }
         }
 
         render(view: "lotteryWinner", model: [winner: winner])
@@ -93,5 +94,11 @@ class VoteController {
             if(!winner || vote.weight > winner.weight) winner = vote
         }
         render(view: "majorityWinner", model: [winner: winner])
+    }
+
+    def awardWinner(){
+        voteService.awardWinner(params.winner)
+        println voteService.getDistinct()
+        redirect action: "votes"
     }
 }

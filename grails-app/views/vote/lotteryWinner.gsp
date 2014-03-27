@@ -14,6 +14,12 @@
         <div>
             <p>The winner is ${winner.selectionName}</p>
         </div>
+        <g:form name="winner" action="awardWinner" class="form-horizontal">
+            <g:hiddenField name="winner" value="${winner.selectionName}" />
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+        </g:form>
     </div>
 </body>
 </html>

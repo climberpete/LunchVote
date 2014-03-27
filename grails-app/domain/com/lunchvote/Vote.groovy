@@ -4,9 +4,13 @@ class Vote {
 
     String selectionName
     String username
-    Long weight = 1
+    Double weight = 1
 
     static constraints = {
+    }
+
+    def beforeInsert(){
+        if(!weight) weight = 1
     }
 
 }

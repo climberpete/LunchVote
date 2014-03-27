@@ -19,4 +19,16 @@ class VoteService {
         }
         return distinctVotes
     }
+
+    def awardWinner(String winner){
+        def voteList = Vote.findAllBySelectionName(winner)
+        voteList.each{ vote ->
+            vote.delete(flush: true)
+        }
+        voteList = Vote.findAll()
+        voteList.each{ vote ->
+            vote.weight = vote.weight/2
+            vote.save()
+        }
+    }
 }
