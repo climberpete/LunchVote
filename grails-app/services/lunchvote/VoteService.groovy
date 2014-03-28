@@ -31,4 +31,15 @@ class VoteService {
             vote.save()
         }
     }
+
+    def save(Vote vote){
+        if(vote.weight == null){
+            vote.weight = 1
+        }
+        vote.save()
+    }
+
+    def delete(Vote vote){
+        vote.delete()
+    }
 }
