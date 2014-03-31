@@ -99,4 +99,9 @@ class VoteController {
         voteService.awardWinner(params.winner)
         redirect action: "votes"
     }
+
+    def showVoters(){
+        def voters = voteService.getDistinctVoters()
+        render(view: "showVoters", model: [distinctVoters: voters])
+    }
 }

@@ -42,4 +42,20 @@ class VoteService {
     def delete(Vote vote){
         vote.delete()
     }
+
+    def getDistinctVoters(){
+        def voteList = Vote.getAll()
+        def distinctVoters = []
+        voteList.each{ vote ->
+            def found = false
+            distinctVoters.each{ distinct ->
+                if(vote.username == distinct.username){
+                    distinct.weight += vote.weight
+                    found = true
+                }
+            }
+            if(!found)distinctVoters.add(["username": vote.username, "weight": vote.weight])
+        }
+        return distinctVoters
+    }
 }
