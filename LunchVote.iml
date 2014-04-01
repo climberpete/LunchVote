@@ -45,6 +45,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="grails-2.2.0" level="application" />
+    <orderEntry type="module" module-name="LunchVote-grailsPlugins" />
     <orderEntry type="module-library" exported="">
       <library name="Grails User Library (LunchVote)">
         <CLASSES>
@@ -55,7 +56,6 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="LunchVote-grailsPlugins" />
   </component>
 </module>
 

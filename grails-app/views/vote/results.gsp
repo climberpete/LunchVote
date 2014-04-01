@@ -29,6 +29,7 @@
     <div><a href="#" class="clear">Clear my votes</a></div>
     <div><g:link action="lotteryWinner">Generate Lottery Winner</g:link></div>
     <div><g:link action="majorityWinner">Generate Majority Winner</g:link></div>
+    <div><g:link action="showVoters">Show those who have voted</g:link></div>
     <div id="clearModal" class="modal hide fade" >
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

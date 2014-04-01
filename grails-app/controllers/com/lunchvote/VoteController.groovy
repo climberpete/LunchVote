@@ -12,7 +12,7 @@ class VoteController {
         def vote = new Vote()
         vote.selectionName = params.restaurant
         vote.username = params.username
-        vote.save()
+        voteService.save(vote)
         redirect action: "votes"
     }
 
@@ -29,9 +29,8 @@ class VoteController {
                 def vote = new Vote()
                 vote.selectionName = restaurant
                 vote.username = username
-                vote.save()
+                voteService.save(vote)
             }
-
         }
         redirect action: "results"
     }
@@ -39,7 +38,7 @@ class VoteController {
     def clear(){
         def voteList = Vote.findAllByUsernameAndWeight(params.username, 1)
         voteList.each{ vote ->
-            vote.delete()
+            voteService.delete(vote)
         }
         redirect action: "votes"
     }
@@ -47,7 +46,7 @@ class VoteController {
     def clearAll(){
         def voteList = Vote.findAll()
         voteList.each{ vote ->
-            vote.delete()
+            voteService.delete(vote)
         }
         redirect action: "votes"
     }
@@ -98,7 +97,11 @@ class VoteController {
 
     def awardWinner(){
         voteService.awardWinner(params.winner)
-        println voteService.getDistinct()
         redirect action: "votes"
+    }
+
+    def showVoters(){
+        def voters = voteService.getDistinctVoters()
+        render(view: "showVoters", model: [distinctVoters: voters])
     }
 }
