@@ -1,34 +1,39 @@
 package com.lunchvote
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(['ROLE_USER'])
 class VoteController {
 
     def voteService
+    def springSecurityService
 
     def index() {
         redirect action: "votes"
     }
 
     def create(){
+        def user = User.get(springSecurityService.principal.id)
         def vote = new Vote()
         vote.selectionName = params.restaurant
-        vote.username = params.username
+        vote.user = user.id
         voteService.save(vote)
         redirect action: "votes"
     }
 
     def submit(){
         def restaurantList = params.restaurants
-        def username = params.username
+        def user = User.get(springSecurityService.principal.id)
         //handle single vote
         if(restaurantList instanceof String){
             restaurantList = [restaurantList]
         }
         restaurantList.each{ restaurant ->
-            def votes = Vote.findAllBySelectionNameAndUsername(restaurant, username)
+            def votes = Vote.findAllBySelectionNameAndUser(restaurant, user.id)
             if(votes.size() == 0){
                 def vote = new Vote()
                 vote.selectionName = restaurant
-                vote.username = username
+                vote.user = user.id
                 voteService.save(vote)
             }
         }
@@ -36,7 +41,8 @@ class VoteController {
     }
 
     def clear(){
-        def voteList = Vote.findAllByUsernameAndWeight(params.username, 1)
+        def user = User.get(springSecurityService.principal.id)
+        def voteList = Vote.findAllByUserAndWeight(user.id, 1)
         voteList.each{ vote ->
             voteService.delete(vote)
         }
@@ -56,6 +62,7 @@ class VoteController {
         render(view: "vote", model: [restaurantList: distinct])
     }
 
+    @Secured(['permitAll'])
     def results(){
         def votes = voteService.getDistinct()
         def results = []
@@ -103,5 +110,29 @@ class VoteController {
     def showVoters(){
         def voters = voteService.getDistinctVoters()
         render(view: "showVoters", model: [distinctVoters: voters])
+    }
+
+    def addUser(){
+        def user = new User()
+        user.username = params.username
+        user.password = params.password
+        user.save(flush: true)
+
+        def userRole = new UserRole()
+        userRole.user = user
+        userRole.role = Role.findByAuthority('ROLE_USER')
+        userRole.save(flush: true)
+
+        redirect action: "results"
+    }
+
+    def changePassword(){
+        def password = params.password
+        def confirm = params.confirmPassword
+        if(password == confirm  && password.length() > 0){
+            def user = User.get(springSecurityService.principal.id)
+            user.password = password
+        }
+        redirect action: "votes"
     }
 }

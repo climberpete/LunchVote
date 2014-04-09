@@ -38,6 +38,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+
     }
 
     dependencies {
@@ -63,5 +64,6 @@ grails.project.dependency.resolution = {
         compile ':cache:1.0.1'
         compile ":twitter-bootstrap:3.1.1"
         compile ":google-visualization:0.6.2"
+
     }
 }

@@ -49,12 +49,12 @@ class VoteService {
         voteList.each{ vote ->
             def found = false
             distinctVoters.each{ distinct ->
-                if(vote.username == distinct.username){
+                if(vote.user == distinct.user){
                     distinct.weight += vote.weight
                     found = true
                 }
             }
-            if(!found)distinctVoters.add(["username": vote.username, "weight": vote.weight])
+            if(!found)distinctVoters.add(["user": vote.user, "weight": vote.weight])
         }
         return distinctVoters
     }

@@ -22,11 +22,50 @@
 		<r:layoutResources />
 	</head>
 	<body>
-		<div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div>
+		<div id="grailsLogo" role="banner" class="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a>
+            <sec:ifNotLoggedIn>
+                <div class="logout"><g:link controller="login" action="auth">Login</g:link></div>
+            </sec:ifNotLoggedIn>
+            <sec:ifLoggedIn>
+                <div class="logout">
+                    Howdy <sec:username /> <g:link controller="logout">Sign Out</g:link>
+                    <a href="#" class="changePassword">Change Password</a>
+                </div>
+            </sec:ifLoggedIn>
+
+        </div>
 		<g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 		<g:javascript library="application"/>
 		<r:layoutResources />
+        <div id="changePassword" class="modal hide fade" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Change Password</h3>
+            </div>
+            <div class="modal-body">
+                <g:form name="changePassword" action="changePassword" class="form-horizontal">
+                    <div id="password" class="control-group">
+                        Password
+                        <g:passwordField name="password" value="" />
+                    </div>
+                    <div id="password" class="control-group">
+                        Confirm
+                        <g:passwordField name="confirmPassword" value="" />
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </g:form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function(){
+                $(".changePassword").click(function() {
+                    $("#changePassword").modal();
+                })
+            });
+        </script>
 	</body>
 </html>

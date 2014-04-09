@@ -3,7 +3,7 @@ package com.lunchvote
 class Vote {
 
     String selectionName
-    String username
+    Long user
     Double weight
 
     static constraints = {
