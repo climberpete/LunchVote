@@ -10,12 +10,12 @@ class VoteService {
         voteList.each{ vote ->
             def found = false
             distinctVotes.each{ distinct ->
-                if(vote.selectionName == distinct.selectionName){
+                if(vote.restaurantId == distinct.restaurantId){
                     distinct.weight += vote.weight
                     found = true
                 }
             }
-            if(!found)distinctVotes.add(["selectionName": vote.selectionName, "weight": vote.weight])
+            if(!found)distinctVotes.add(["selectionName": vote.selectionName, "weight": vote.weight, "restaurantId": vote.restaurantId])
         }
         return distinctVotes
     }
@@ -25,9 +25,9 @@ class VoteService {
         voteList.each{ vote ->
             vote.delete(flush: true)
         }
-        voteList = Vote.findAll()
+        voteList = Vote.getAll()
         voteList.each{ vote ->
-            vote.weight = vote.weight/2
+            vote.weight = vote.weight*3/4
             vote.save()
         }
     }

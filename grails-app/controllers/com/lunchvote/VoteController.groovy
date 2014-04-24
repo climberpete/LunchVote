@@ -6,6 +6,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class VoteController {
 
     def voteService
+    def restaurantService
     def springSecurityService
 
     def index() {
@@ -29,10 +30,11 @@ class VoteController {
             restaurantList = [restaurantList]
         }
         restaurantList.each{ restaurant ->
-            def votes = Vote.findAllBySelectionNameAndUser(restaurant, user.id)
+            def restaurantId = new Long(restaurant)
+            def votes = Vote.findAllByRestaurantIdAndUserAndWeight(restaurantId, user.id, 1)
             if(votes.size() == 0){
                 def vote = new Vote()
-                vote.selectionName = restaurant
+                vote.restaurantId = restaurantId
                 vote.user = user.id
                 voteService.save(vote)
             }
@@ -58,8 +60,8 @@ class VoteController {
     }
 
     def votes(){
-        def distinct = voteService.getDistinct()
-        render(view: "vote", model: [restaurantList: distinct])
+        def restaurants = restaurantService.getRandomOrder()
+        render(view: "vote", model: [restaurantList: restaurants])
     }
 
     @Secured(['permitAll'])
@@ -68,7 +70,8 @@ class VoteController {
         def results = []
         results.add(['"Restaurant"', '"Votes"'])
         votes.each {
-            results.add(['"' + it.selectionName + '"', it.weight])
+            def restaurant = Restaurant.read(it.restaurantId)
+            results.add(['"' + restaurant.name + '"', it.weight])
         }
         render(view: "results", model: [results: results])
     }
@@ -133,6 +136,30 @@ class VoteController {
             def user = User.get(springSecurityService.principal.id)
             user.password = password
         }
+        redirect action: "votes"
+    }
+
+    def editRestaurant(){
+        def restaurant = Restaurant.get(params.editRestaurantId)
+        restaurant.description = params.editDescription
+        restaurant.website = params.editWebsite
+        restaurant.imageUrl = params.editImageUrl
+        restaurant.save()
+        redirect action: "votes"
+    }
+
+    def addRestaurant(){
+        def restaurant = new Restaurant()
+        restaurant.name = params.addName
+        restaurant.description = params.addDescription
+        restaurant.website = params.addWebsite
+        restaurant.imageUrl = params.addImageUrl
+        restaurant.save()
+        def vote = new Vote()
+//        vote.restaurantId = restaurant.id
+//        vote.weight = 1
+//        vote.user = springSecurityService.principal.id
+//        vote.save()
         redirect action: "votes"
     }
 }
