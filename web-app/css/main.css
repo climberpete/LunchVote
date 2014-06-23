@@ -604,3 +604,8 @@ a.skip {
     right:0;
     top:0;
 }
+
+.carousel img {
+    height: 400px;
+    width: 600px;
+}
